@@ -1,0 +1,780 @@
+{
+  "profile": {
+    "name": "Sajal Dutt Bansal",
+    "initials": "SB",
+    "url": "https://sajaldbansal.com",
+    "role": "Full Stack Developer",
+    "location": "Uttar Pradesh, India",
+    "description": "Full Stack Developer building production web apps and distributed, real-time systems with TypeScript, React, Next.js, Node.js, PostgreSQL and Redis.",
+    "summary": "Full Stack Developer with hands-on experience building production web applications and distributed, real-time systems using TypeScript, React.js, Next.js, Node.js, PostgreSQL and Redis. Built a low-latency cryptocurrency matching engine, a DAG-based workflow automation platform and client products in healthcare and accounting. MCA graduate with a focus on system design, concurrency and scalable backend architecture. Currently moving towards AI, learning it hands-on by building and experimenting with LLMs and agentic tooling.",
+    "avatarUrl": "/sajaldbansal_profile.png",
+    "resumeUrl": "https://drive.google.com/file/d/1j1nDNQNIx6zq8sFpkpRar0dh71FUmWvG/view?usp=sharing",
+    "email": "sajaldutt.bansal@gmail.com",
+    "phone": "+91-63955-09503",
+    "social": {
+      "GitHub": {
+        "url": "https://github.com/SajalDBansal",
+        "navbar": true
+      },
+      "LinkedIn": {
+        "url": "https://linkedin.com/in/sajalduttbansal",
+        "navbar": true
+      },
+      "Email": {
+        "url": "mailto:sajaldutt.bansal@gmail.com",
+        "navbar": true
+      }
+    }
+  },
+  "navbar": [
+    {
+      "href": "/",
+      "label": "Home",
+      "icon": "home"
+    },
+    {
+      "href": "/blog",
+      "label": "Blog",
+      "icon": "notebook"
+    }
+  ],
+  "skills": [
+    {
+      "category": "Languages",
+      "items": [
+        "TypeScript",
+        "JavaScript",
+        "Java",
+        "Python",
+        "SQL"
+      ]
+    },
+    {
+      "category": "Frontend",
+      "items": [
+        "React.js",
+        "Next.js",
+        "HTML",
+        "Tailwind CSS"
+      ]
+    },
+    {
+      "category": "Backend",
+      "items": [
+        "Node.js",
+        "Express.js",
+        "REST APIs",
+        "WebSockets",
+        "Server-Sent Events (SSE)",
+        "JWT"
+      ]
+    },
+    {
+      "category": "Databases",
+      "items": [
+        "PostgreSQL",
+        "MySQL",
+        "MongoDB",
+        "Redis",
+        "Prisma ORM"
+      ]
+    },
+    {
+      "category": "DevOps and Infra",
+      "items": [
+        "Docker",
+        "Kubernetes",
+        "AWS",
+        "CI/CD",
+        "Git",
+        "GitHub Actions",
+        "NATS",
+        "Microservices"
+      ]
+    },
+    {
+      "category": "AI and Tooling",
+      "items": [
+        "LLM Integration (OpenAI, Anthropic, Google Gemini)",
+        "Streaming Tool-Calling Agents"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "company": "Brainbow Enterprises",
+      "title": "Full Stack Developer",
+      "type": "Contract Work",
+      "location": "Remote",
+      "start": "November 2025",
+      "end": "April 2026",
+      "highlights": [
+        "Shipped HabitKit across 8 modules (streaks, categorized habits, drag-and-drop prioritization, multi-frequency reminders), eliminating duplicate check-ins across 30+ timezones via timezone-aware date mapping and atomic transactions.",
+        "Cut analytics dashboard load time from 900 ms to under 150 ms (6x) by introducing pre-aggregated statistics models and indexed database queries."
+      ]
+    },
+    {
+      "company": "Balaji Hardware Stores",
+      "title": "Full Stack Developer",
+      "type": "Freelance",
+      "location": "Remote",
+      "start": "August 2025",
+      "end": "October 2025",
+      "highlights": [
+        "Replaced error-prone spreadsheet tracking with Invento, an inventory and accounting system built on an auditable double entry ledger with role-based access scoping visibility for admins, accountants and staff.",
+        "Shipped interactive dashboards surfacing stock and revenue trends, boosting productivity by 35% and cutting month-end reconciliation from 2 days to under 4 hours."
+      ]
+    },
+    {
+      "company": "Dr. Navneet Goel Clinic",
+      "title": "Full Stack Developer",
+      "type": "Freelance",
+      "location": "Remote",
+      "start": "June 2025",
+      "end": "July 2025",
+      "highlights": [
+        "Replaced manual register-based scheduling with KidsClinic, a full-stack platform backed by REST APIs and a normalized PostgreSQL schema serving real-time search over 1,000+ patient records.",
+        "Unified the clinic's booking-to-checkup workflow into a single calendar-driven flow, improving patient attendance by 20% and cutting daily scheduling overhead for front-desk staff."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "school": "Manipal University",
+      "degree": "Master of Computer Applications (MCA)",
+      "cgpa": "8.70",
+      "courses": [
+        "System Design",
+        "DBMS",
+        "Computer Networks",
+        "Distributed Systems"
+      ],
+      "start": "2023",
+      "end": "2025"
+    },
+    {
+      "school": "Delhi University",
+      "degree": "Bachelor's of Commerce (B Com.)",
+      "cgpa": "7.91",
+      "courses": [],
+      "start": "2019",
+      "end": "2023"
+    }
+  ],
+  "projects": [
+    {
+      "slug": "codepuppet",
+      "title": "CodePuppet",
+      "tagline": "Self-Hosted AI Coding Agent Platform",
+      "description": "A self-hosted platform for running AI coding agents against your own codebase, using your own API keys so you always stay in control of your credentials and how your code is touched.",
+      "overview": "CodePuppet is a self-hosted platform for running AI coding agents against your own codebase, using your own LLM API keys — the backend only ever stores and uses credentials a user has explicitly saved, never a shared key. It's split into three pieces that share a common backend contract: an Express + Prisma API that owns agent sessions and encrypted credentials, a local CLI that executes file/process/git tools on the developer's own machine, and a Next.js web app for account sign-up and approving CLI device-login requests.",
+      "features": [
+        "Bring-your-own-key: each user's OpenAI, Anthropic, or Google API key is encrypted per-user on the backend, never shared globally.",
+        "Streams agent responses token-by-token over Server-Sent Events for a chosen provider/model.",
+        "Lets the model call tools mid-conversation — file/process/git tools run locally via the CLI, while a small set of \"backend\" tools run server-side, with results fed back into the same conversation.",
+        "OAuth-style device-authorization login for the CLI — type a short code and approve it from the browser, no pasting long tokens into a terminal."
+      ],
+      "architecture": "A Turborepo/Bun monorepo: apps/api (Express + Prisma/Postgres) owns users, encrypted credentials and agent sessions; apps/cli is a local Node CLI that executes tools in the developer's own workspace; apps/web is a Next.js app for sign-in and device-login approval. Six shared workspace packages sit underneath — database, protocol (Zod schemas), provider-registry (one streaming adapter per LLM provider), tool-registry, harness (the CLI's local API client/config store), and a shared shadcn/ui component library.",
+      "services": [
+        {
+          "name": "apps/api",
+          "description": "Express + Prisma/Postgres backend — owns users, encrypted provider credentials, and the full lifecycle of an agent session."
+        },
+        {
+          "name": "apps/cli",
+          "description": "Node CLI (code-puppet) that developers install locally, log in from, and run agent sessions from inside a real workspace, executing tools on their own machine."
+        },
+        {
+          "name": "apps/web",
+          "description": "Next.js app for account sign-up/sign-in and approving CLI device-login requests in the browser."
+        }
+      ],
+      "highlights": [
+        "Designed a provider-agnostic streaming layer with adapters for 3 LLM providers (OpenAI, Google, Anthropic) normalised behind a single event contract, forwarding tokens to clients over Server-Sent Events in under 100 ms while persisting each turn atomically in 1 Prisma transaction with per-turn token accounting.",
+        "Secured multi-tenant credentials with AES-256-GCM encryption and per-user HKDF-SHA256 derived keys bound to (user, provider, label) as authenticated data, and added an OAuth-style device-authorization login flow for CLI sessions.",
+        "Eliminated a remote code execution path by resolving tool-execution category server-side across 5 tool categories rather than trusting client input; validated with 40+ Jest tests."
+      ],
+      "technologies": [
+        "Commander.js",
+        "EC2",
+        "Cli",
+        "Express",
+        "Prisma",
+        "PostgreSQL",
+        "Next.js 16",
+        "SSE",
+        "CI/CD"
+      ],
+      "techStack": [
+        {
+          "category": "Language & Runtime",
+          "items": [
+            "TypeScript",
+            "Bun 1.3",
+            "Node.js 20+"
+          ]
+        },
+        {
+          "category": "Monorepo Tooling",
+          "items": [
+            "Turborepo",
+            "Bun workspaces"
+          ]
+        },
+        {
+          "category": "Backend",
+          "items": [
+            "Express 4",
+            "PostgreSQL",
+            "Prisma ORM"
+          ]
+        },
+        {
+          "category": "Auth",
+          "items": [
+            "better-auth",
+            "Device-authorization flow"
+          ]
+        },
+        {
+          "category": "Validation",
+          "items": [
+            "Zod v4"
+          ]
+        },
+        {
+          "category": "LLM Providers",
+          "items": [
+            "OpenAI SDK",
+            "Anthropic SDK",
+            "Google GenAI SDK"
+          ]
+        },
+        {
+          "category": "Frontend",
+          "items": [
+            "Next.js 16",
+            "React 19",
+            "Tailwind CSS v4",
+            "shadcn/ui"
+          ]
+        },
+        {
+          "category": "CLI",
+          "items": [
+            "Commander",
+            "Inquirer",
+            "Axios",
+            "Chalk"
+          ]
+        },
+        {
+          "category": "Testing & Infra",
+          "items": [
+            "Jest",
+            "Docker Compose"
+          ]
+        }
+      ],
+      "languages": [
+        {
+          "name": "TypeScript",
+          "percent": 94
+        },
+        {
+          "name": "CSS",
+          "percent": 2
+        },
+        {
+          "name": "JavaScript",
+          "percent": 2
+        },
+        {
+          "name": "Dockerfile",
+          "percent": 1
+        }
+      ],
+      "setup": [
+        {
+          "step": "Install dependencies",
+          "commands": [
+            "bun install"
+          ]
+        },
+        {
+          "step": "Start Postgres",
+          "commands": [
+            "docker compose -f infra/docker-compose.database.yml up -d"
+          ]
+        },
+        {
+          "step": "Configure environment variables",
+          "commands": [
+            "cp apps/api/.env.example apps/api/.env",
+            "cp apps/cli/.env.example apps/cli/.env"
+          ]
+        },
+        {
+          "step": "Run database migrations and seed the model catalog",
+          "commands": [
+            "bun run db:migrate:dev",
+            "bun run db:seed"
+          ]
+        },
+        {
+          "step": "Run everything (API, web, CLI watch builds)",
+          "commands": [
+            "bun run dev"
+          ]
+        }
+      ],
+      "links": [
+        {
+          "type": "GitHub",
+          "href": "https://github.com/SajalDBansal/CodePuppetAI"
+        },
+        {
+          "type": "Demo",
+          "href": "https://codepuppet.sajaldbansal.com"
+        }
+      ]
+    },
+    {
+      "slug": "cryptex",
+      "title": "CryptEx",
+      "tagline": "Cryptocurrency Exchange",
+      "description": "A centralized cryptocurrency exchange with a custom matching engine for spot and perpetual futures trading, built to handle a high volume of orders with very low latency.",
+      "overview": "CryptEx is a centralized crypto exchange backend: a custom spot and perpetual-futures matching engine, plus the REST API and supporting services around it — persistence, WebSocket fan-out, an external mark-price feed and a reverse proxy — built as a Bun/Turborepo TypeScript monorepo. Nothing talks to the trading engine over HTTP: every order, balance change and admin action is a message on a Redis Stream, and every effect the engine produces is a message on a response stream that downstream services each consume independently.",
+      "features": [
+        "Custom spot and perpetual-futures matching engine handling order creation, liquidation/ADL, funding settlement, and commission & insurance funds.",
+        "Fully event-driven: every state change flows through Redis Streams (engine.request / engine.response), so persistence and WebSocket fan-out are independent consumers, not synchronous calls.",
+        "Real-time WebSocket fan-out of order book, balance and position updates to browser clients.",
+        "External mark-price feed polling Binance plus an hourly funding-rate scheduler.",
+        "Hourly engine-state snapshots to Cloudflare R2 for recovery.",
+        "A reverse proxy exposing Backpack Exchange's public market data independently of the core engine."
+      ],
+      "architecture": "core-backend (REST API) and ws-index-poller (Binance mark-price feed) publish onto the engine.request Redis Stream; core-trading-engine consumes it, performs matching/balances/positions/funding, and publishes results onto engine.response, which database-engine (Postgres persistence) and ws-server (WebSocket broadcast) each consume as their own independent consumer group.",
+      "services": [
+        {
+          "name": "core-backend",
+          "description": "REST API — auth, admin, orders, balances, market data (port 8080)"
+        },
+        {
+          "name": "core-trading-engine",
+          "description": "Matching engine — order book, balances, positions, funding, liquidation (port 8081)"
+        },
+        {
+          "name": "database-engine",
+          "description": "Persists every engine update to Postgres (port 8082)"
+        },
+        {
+          "name": "ws-server",
+          "description": "WebSocket fan-out of engine updates to browser clients (port 8083)"
+        },
+        {
+          "name": "ws-index-poller",
+          "description": "Binance mark-price feed + hourly funding-rate scheduler (port 8084)"
+        },
+        {
+          "name": "proxy-server",
+          "description": "Reverse proxy to Backpack Exchange's public REST API (port 8085)"
+        },
+        {
+          "name": "core-frontend",
+          "description": "Public-facing web app (Next.js, port 3000)"
+        }
+      ],
+      "highlights": [
+        "Engineered a centralized matching and execution engine for Spot and Perpetual Futures trading, sustaining 1,000+ orders/second with sub-50 ms p95 execution latency across 6 microservices in a Turborepo monorepo.",
+        "Streamed order book and trade updates to 500+ concurrent WebSocket clients, cutting update lag from 2 s polling to under 100 ms via Redis pub/sub.",
+        "Achieved zero order loss on restart by persisting engine state through Redis pipelines and 30-second snapshots, restoring the full order book in under 5 seconds and resolving concurrent order-execution race conditions."
+      ],
+      "technologies": [
+        "Next.js",
+        "Node.js",
+        "TypeScript",
+        "WebSockets",
+        "Redis",
+        "PostgreSQL",
+        "Microservices"
+      ],
+      "techStack": [
+        {
+          "category": "Language & Runtime",
+          "items": [
+            "TypeScript",
+            "Bun 1.3",
+            "Node.js 20+"
+          ]
+        },
+        {
+          "category": "Monorepo Tooling",
+          "items": [
+            "Turborepo"
+          ]
+        },
+        {
+          "category": "Backend",
+          "items": [
+            "Express",
+            "PostgreSQL",
+            "Prisma ORM"
+          ]
+        },
+        {
+          "category": "Messaging",
+          "items": [
+            "Redis Streams"
+          ]
+        },
+        {
+          "category": "Realtime",
+          "items": [
+            "WebSockets"
+          ]
+        },
+        {
+          "category": "Frontend",
+          "items": [
+            "Next.js",
+            "shadcn/ui"
+          ]
+        },
+        {
+          "category": "Infra",
+          "items": [
+            "Docker Compose",
+            "Cloudflare R2"
+          ]
+        }
+      ],
+      "languages": [
+        {
+          "name": "TypeScript",
+          "percent": 95
+        },
+        {
+          "name": "CSS",
+          "percent": 2
+        },
+        {
+          "name": "PLpgSQL",
+          "percent": 1
+        },
+        {
+          "name": "Dockerfile",
+          "percent": 1
+        },
+        {
+          "name": "JavaScript",
+          "percent": 1
+        }
+      ],
+      "setup": [
+        {
+          "step": "Clone the repo",
+          "commands": [
+            "git clone https://github.com/SajalDBansal/centralized-exchange.git",
+            "cd centralized-exchange",
+            "bun install"
+          ]
+        },
+        {
+          "step": "Start everything in Docker (Postgres, Redis, every service)",
+          "commands": [
+            "docker compose -f infra/docker-compose.dev.yml up -d"
+          ]
+        },
+        {
+          "step": "Run database migrations",
+          "commands": [
+            "cd packages/database",
+            "bunx prisma migrate deploy"
+          ]
+        },
+        {
+          "step": "Start the frontends",
+          "commands": [
+            "bun run dev"
+          ]
+        }
+      ],
+      "links": [
+        {
+          "type": "GitHub",
+          "href": "https://github.com/SajalDBansal/centralized-exchange"
+        },
+        {
+          "type": "Demo",
+          "href": ""
+        }
+      ]
+    },
+    {
+      "slug": "flowforge",
+      "title": "FlowForge",
+      "tagline": "Workflow Automation (n8n-style)",
+      "description": "A visual workflow automation builder — drag, drop, and connect nodes to automate multi-step tasks without writing any code, powered by a custom execution engine running everything reliably behind the scenes.",
+      "overview": "FlowForge is a full-stack, visual workflow-automation platform in the spirit of n8n/Zapier/Make: users drag-and-drop nodes onto a canvas, wire them together with conditional logic, and the backend executes the resulting graph — resolving dynamic expressions between nodes and streaming live status back to the canvas as each node runs.",
+      "features": [
+        "Drag-and-drop canvas (React Flow) for building workflows out of Trigger, Action and Logic nodes, each with its own configurable credentials and parameters.",
+        "Execution engine (@workspace/execution-core) traverses the workflow graph, resolves dynamic expressions between nodes (e.g. pulling a previous node's output), and executes each node's logic in sequence.",
+        "Live execution feedback over Server-Sent Events — nodes light up and show their output on the canvas as the run progresses, instead of waiting for the whole workflow to finish.",
+        "Project-based organization: workflows live inside projects, each with their own credentials scope."
+      ],
+      "architecture": "A Turborepo monorepo with a single Next.js app (apps/web) hosting the dashboard, canvas and API routes, backed by shared packages: execution-core (the engine that runs workflows and resolves expressions), node-base (base classes/types for standard nodes), validators (Zod schemas for API inputs and node configs), and a shared shadcn/ui component library.",
+      "services": [],
+      "highlights": [
+        "Designed a custom DAG-based execution engine using Kahn's algorithm that validates and runs workflows of 50+ nodes, executing up to 10 independent branches concurrently and cutting end-to-end run time by 60% versus sequential execution.",
+        "Shipped a drag-and-drop canvas with 12+ node types (triggers, conditionals, AI agents, Telegram and Resend integrations), dynamic variable resolution and 3-attempt exponential-backoff retries that reduced failed runs by 40%.",
+        "Delivered live execution tracking over Server-Sent Events with under 200 ms update latency, backed by 50+ unit and integration tests."
+      ],
+      "technologies": [
+        "Next.js",
+        "React Flow",
+        "Tailwind CSS",
+        "PostgreSQL",
+        "Prisma",
+        "SSE"
+      ],
+      "techStack": [
+        {
+          "category": "Frontend",
+          "items": [
+            "Next.js (App Router)",
+            "React",
+            "Tailwind CSS",
+            "shadcn/ui",
+            "Framer Motion"
+          ]
+        },
+        {
+          "category": "Visual Builder",
+          "items": [
+            "React Flow (@xyflow/react)"
+          ]
+        },
+        {
+          "category": "Backend",
+          "items": [
+            "PostgreSQL",
+            "Prisma ORM"
+          ]
+        },
+        {
+          "category": "Execution Engine",
+          "items": [
+            "Vercel AI SDK",
+            "p-limit (concurrency)"
+          ]
+        },
+        {
+          "category": "Infra",
+          "items": [
+            "Docker",
+            "Redis"
+          ]
+        },
+        {
+          "category": "Package Manager",
+          "items": [
+            "Bun"
+          ]
+        }
+      ],
+      "languages": [
+        {
+          "name": "TypeScript",
+          "percent": 99
+        },
+        {
+          "name": "CSS",
+          "percent": 1
+        }
+      ],
+      "setup": [
+        {
+          "step": "Install dependencies",
+          "commands": [
+            "bun install"
+          ]
+        },
+        {
+          "step": "Start infrastructure (Postgres + Redis)",
+          "commands": [
+            "bun run docker:start"
+          ]
+        },
+        {
+          "step": "Push the database schema",
+          "commands": [
+            "cd packages/database && bun run db:push"
+          ]
+        },
+        {
+          "step": "Start the dev server",
+          "commands": [
+            "bun run dev"
+          ]
+        }
+      ],
+      "links": [
+        {
+          "type": "GitHub",
+          "href": "https://github.com/SajalDBansal/n8n-automation"
+        },
+        {
+          "type": "Demo",
+          "href": ""
+        }
+      ]
+    },
+    {
+      "slug": "habitkit",
+      "title": "HabitKit",
+      "tagline": "Habit Tracking Platform",
+      "description": "A habit tracking app that helps you build better habits through daily streaks, clean progress visualizations, and timely reminders — designed to make staying consistent feel effortless.",
+      "overview": "Habitkit is a modern, full-stack habit tracking app built to help you build better habits one day at a time — a focused dashboard, rich analytics, and a clean UI to see your progress, stay accountable, and tweak your routines quickly.",
+      "features": [
+        "Dashboard overview showing key habits, current streaks, longest streaks and total completions at a glance, with timezone-aware stats so \"today\" always matches your local day.",
+        "Create, organize and categorize habits (Health, Learning, Productivity, etc.) with color-coding and icons for quick visual scanning.",
+        "Daily completion tracking with streaks and completion counts, backed by a deterministic seed dataset for demos and testing.",
+        "Historical analytics over the last 90 days, built to integrate with charts and advanced analytics views.",
+        "App-wide sidebar (Dashboard, Habits, Analytics, Calendar, Reminders, Community, Settings) with breadcrumb navigation and a responsive, collapsible layout.",
+        "Email/session authentication via NextAuth, with a dark-mode-first interface using next-themes."
+      ],
+      "architecture": "A single Next.js App Router application: app/ holds route entrypoints and layouts, including an auth-aware app layout with sidebar and header; components/ holds the design-system and layout components; prisma/ holds the schema plus a seed script that generates a deterministic dataset of habits, categories, daily stats and completions for local development.",
+      "services": [],
+      "highlights": [
+        "Eliminated tracking errors across 30+ timezones with timezone-aware date mapping and atomic transactions, removing duplicate check-ins from streak race conditions.",
+        "Reduced analytics dashboard load time from 900 ms to under 150 ms (6x faster) by introducing pre-aggregated statistics models and indexed queries in place of on-demand aggregation over full history.",
+        "Shipped 8 feature modules including streaks, categorised habits, drag-and-drop prioritisation, multi-frequency scheduling and reminders, deployed on Vercel with CI/CD."
+      ],
+      "technologies": [
+        "Next.js",
+        "React 19",
+        "TypeScript",
+        "PostgreSQL",
+        "Prisma",
+        "NextAuth",
+        "Recharts"
+      ],
+      "techStack": [
+        {
+          "category": "Framework",
+          "items": [
+            "Next.js 16 (App Router)"
+          ]
+        },
+        {
+          "category": "Language",
+          "items": [
+            "TypeScript",
+            "React 19"
+          ]
+        },
+        {
+          "category": "Styling & UI",
+          "items": [
+            "Tailwind CSS v4",
+            "shadcn/ui",
+            "Radix UI",
+            "Lucide React"
+          ]
+        },
+        {
+          "category": "State & Forms",
+          "items": [
+            "React Hook Form",
+            "Zod"
+          ]
+        },
+        {
+          "category": "Data & Backend",
+          "items": [
+            "PostgreSQL",
+            "Prisma ORM",
+            "date-fns",
+            "date-fns-tz"
+          ]
+        },
+        {
+          "category": "Auth",
+          "items": [
+            "NextAuth (Prisma adapter)"
+          ]
+        },
+        {
+          "category": "UX",
+          "items": [
+            "@dnd-kit",
+            "@tanstack/react-table",
+            "Recharts",
+            "Sonner"
+          ]
+        }
+      ],
+      "languages": [
+        {
+          "name": "TypeScript",
+          "percent": 98
+        },
+        {
+          "name": "CSS",
+          "percent": 2
+        }
+      ],
+      "setup": [
+        {
+          "step": "Clone the repository",
+          "commands": [
+            "git clone https://github.com/SajalDBansal/habitkit.git",
+            "cd habitkit"
+          ]
+        },
+        {
+          "step": "Install dependencies",
+          "commands": [
+            "npm install"
+          ]
+        },
+        {
+          "step": "Set up environment variables",
+          "commands": [
+            "DATABASE_URL=\"postgresql://user:password@localhost:5432/habitkit\"",
+            "NEXTAUTH_SECRET=\"your-nextauth-secret\"",
+            "NEXTAUTH_URL=\"http://localhost:3000\""
+          ]
+        },
+        {
+          "step": "Push the Prisma schema",
+          "commands": [
+            "npx prisma db push"
+          ]
+        },
+        {
+          "step": "Seed sample data (optional)",
+          "commands": [
+            "npx prisma db seed"
+          ]
+        },
+        {
+          "step": "Run the development server",
+          "commands": [
+            "npm run dev"
+          ]
+        }
+      ],
+      "links": [
+        {
+          "type": "GitHub",
+          "href": "https://github.com/SajalDBansal/habitkit"
+        },
+        {
+          "type": "Demo",
+          "href": "https://habitkit.sajaldbansal.com"
+        }
+      ]
+    }
+  ]
+}
