@@ -1,0 +1,295 @@
+---
+title: "Deploying Dockerized Apps to EC2: Nginx Reverse Proxy + Certbot"
+publishedAt: "2026-06-22"
+summary: "A full walkthrough of standing up an EC2 instance from the AWS console, attaching an Elastic IP, locking down the security group, deploying containers with Docker Compose, reverse-proxying Next.js/React/backend/SSE traffic through Nginx, and issuing a TLS certificate with Certbot."
+author: "Sajal Dutt Bansal"
+---
+
+This is the runbook I follow to take a set of Dockerized services — a Next.js frontend, a React app, and a backend API with an SSE (Server-Sent Events) endpoint — from nothing to a working, HTTPS-secured deployment on a single EC2 instance.
+
+## 1. Launch the EC2 instance from the AWS console
+
+1. Open the **EC2** service in the AWS Console and click **Launch instance**.
+2. Give it a name (e.g. `app-server`).
+3. Pick an AMI — **Ubuntu Server 22.04/24.04 LTS** is used throughout this guide.
+4. Pick an instance type (e.g. `t3.small` / `t3.medium` — Docker Compose with 2-3 containers is comfortable here).
+5. Under **Key pair**, create a new key pair (RSA, `.pem` format) or select an existing one. Download it — you cannot re-download it later.
+6. Under **Network settings**, either create a new security group now or select an existing one — you'll edit its rules in step 3.
+7. Under **Configure storage**, bump the root volume to at least 20-30 GiB if you're pulling several Docker images.
+8. Click **Launch instance**.
+
+## 2. Allocate and attach an Elastic IP
+
+A plain EC2 public IP changes if the instance stops/starts, which breaks DNS. An Elastic IP is static.
+
+1. In the EC2 console, go to **Network & Security → Elastic IPs**.
+2. Click **Allocate Elastic IP address** → **Allocate**.
+3. Select the new address → **Actions → Associate Elastic IP address**.
+4. Choose **Instance**, pick your instance, and confirm.
+
+Point your domain's `A` record at this Elastic IP now, since DNS propagation takes a while and Certbot will need it resolvable later.
+
+## 3. Update the security group
+
+Edit the security group attached to the instance (**EC2 → Security Groups → [your group] → Inbound rules → Edit inbound rules**):
+
+| Type       | Protocol | Port range | Source          | Purpose                          |
+| ---------- | -------- | ---------- | --------------- | --------------------------------- |
+| SSH        | TCP      | 22         | Your IP only     | Terminal access                  |
+| HTTP       | TCP      | 80         | 0.0.0.0/0, ::/0 | Nginx + Certbot ACME challenge   |
+| HTTPS      | TCP      | 443        | 0.0.0.0/0, ::/0 | Nginx TLS traffic                |
+
+Do **not** expose your app/container ports (3000, 4000, etc.) publicly — Nginx is the only thing that should be internet-facing; containers stay bound to `localhost` or a Docker-internal network.
+
+## 4. Connect from your local terminal
+
+```bash
+chmod 400 ~/Downloads/app-server-key.pem
+ssh -i ~/Downloads/app-server-key.pem ubuntu@<ELASTIC_IP>
+```
+
+## 5. Update the machine
+
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y curl git ufw
+```
+
+## 6. Install Docker and Docker Compose as root (no `sudo` prefix)
+
+Rather than prefixing every command with `sudo`, drop into a root shell once and run the install commands directly.
+
+```bash
+sudo -i
+```
+
+You're now `root@app-server:~#`. Install Docker via the official convenience script — it also installs the Docker Compose plugin:
+
+```bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh get-docker.sh
+rm get-docker.sh
+```
+
+Verify:
+
+```bash
+docker --version
+docker compose version
+```
+
+Let your non-root user run Docker without `sudo` too, then return to it:
+
+```bash
+usermod -aG docker ubuntu
+exit
+```
+
+Log out and back in (or run `newgrp docker`) for the group change to apply.
+
+## 7. Copy the Docker Compose file and environment variables to the machine
+
+From your **local** terminal, `scp` the compose file and `.env` up to the server:
+
+```bash
+scp -i ~/Downloads/app-server-key.pem docker-compose.yml ubuntu@<ELASTIC_IP>:~/app/
+scp -i ~/Downloads/app-server-key.pem .env ubuntu@<ELASTIC_IP>:~/app/
+```
+
+(`mkdir ~/app` on the server first if it doesn't exist yet.) A representative `docker-compose.yml` for the three services:
+
+```yaml title="docker-compose.yml"
+services:
+  frontend:
+    image: your-registry/nextjs-app:latest
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:3000:3000"
+
+  react-app:
+    image: your-registry/react-app:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5173:80"
+
+  backend:
+    image: your-registry/backend-api:latest
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:4000:4000"
+```
+
+Note the `127.0.0.1:` prefix on each port mapping — this keeps containers reachable only from the host itself, not the open internet. Nginx (running on the host) proxies to them from there.
+
+```bash title=".env"
+NODE_ENV=production
+DATABASE_URL=postgres://user:pass@db-host:5432/appdb
+NEXT_PUBLIC_API_URL=https://your-domain.com/api
+JWT_SECRET=change-me
+```
+
+## 8. Start the containers
+
+```bash
+cd ~/app
+docker compose up -d
+docker compose ps
+docker compose logs -f
+```
+
+## 9. Install and configure Nginx
+
+```bash
+sudo apt install -y nginx
+sudo systemctl enable --now nginx
+```
+
+Keep each site's config in its own file under `sites-available`, symlinked into `sites-enabled`. This is the pattern used below.
+
+### Next.js frontend
+
+Standard reverse proxy; the one non-default bit is forwarding upgrade headers in case the app ever needs WebSockets (Next.js dev HMR, etc.).
+
+```plaintext title="/etc/nginx/sites-available/nextjs-app.conf"
+server {
+    listen 80;
+    server_name your-domain.com www.your-domain.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+### React app (static build served from a container)
+
+If the container serves a built static bundle (e.g. via nginx-in-a-container or `vite preview`), this is a plain proxy on its own subdomain or path prefix — no upgrade headers needed since there's no server-rendering or sockets involved.
+
+```plaintext title="/etc/nginx/sites-available/react-app.conf"
+server {
+    listen 80;
+    server_name app.your-domain.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:5173;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # SPA fallback: let the container/app handle client-side routing
+        proxy_intercept_errors off;
+    }
+}
+```
+
+### Backend API, with a dedicated SSE location
+
+The general `/api/` traffic proxies normally. The SSE endpoint (`/api/stream`) needs its own `location` block: buffering **must** be disabled or Nginx will hold the stream open in a buffer and the client never sees events until the connection closes.
+
+```plaintext title="/etc/nginx/sites-available/backend-api.conf"
+server {
+    listen 80;
+    server_name your-domain.com;
+
+    # Regular JSON/REST traffic
+    location /api/ {
+        proxy_pass http://127.0.0.1:4000/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # SSE endpoint — buffering and caching must be off, timeouts extended
+    location /api/stream {
+        proxy_pass http://127.0.0.1:4000/stream;
+        proxy_http_version 1.1;
+
+        proxy_buffering off;
+        proxy_cache off;
+        chunked_transfer_encoding off;
+
+        proxy_set_header Connection "";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_read_timeout 24h;
+        add_header X-Accel-Buffering no;
+    }
+}
+```
+
+`X-Accel-Buffering: no` is a belt-and-suspenders header — it tells Nginx not to buffer this specific response even if a shared config elsewhere sets buffering on.
+
+### Enable the sites
+
+```bash
+sudo ln -s /etc/nginx/sites-available/nextjs-app.conf /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/react-app.conf /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/backend-api.conf /etc/nginx/sites-enabled/
+sudo rm -f /etc/nginx/sites-enabled/default
+
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+## 10. Test that it's working
+
+```bash
+# From the server: confirm each container is actually listening
+curl -I http://127.0.0.1:3000
+curl -I http://127.0.0.1:4000
+
+# From your local machine: confirm Nginx is proxying correctly
+curl -I http://your-domain.com
+curl -N http://your-domain.com/api/stream   # -N disables curl's own buffering, so you should see events arrive as they're sent, not all at once
+```
+
+Also open the domain in a browser and confirm the frontend loads, and check `docker compose logs -f` on the server if anything 502s (a 502 from Nginx almost always means the container isn't up or isn't listening on the port the proxy expects).
+
+## 11. Install Certbot and issue a certificate
+
+```bash
+sudo apt install -y certbot python3-certbot-nginx
+```
+
+Run Certbot against the Nginx configs — it detects the `server_name` directives, obtains certificates, and rewrites the configs to redirect HTTP → HTTPS automatically:
+
+```bash
+sudo certbot --nginx -d your-domain.com -d www.your-domain.com -d app.your-domain.com
+```
+
+Follow the prompts (email for renewal notices, agree to terms, choose to redirect HTTP to HTTPS when asked).
+
+### Verify Certbot is working correctly
+
+```bash
+# Confirm the certificate is installed and check its expiry
+sudo certbot certificates
+
+# Confirm the systemd timer for auto-renewal is active
+systemctl status certbot.timer
+
+# Dry-run the renewal without actually issuing a new cert
+sudo certbot renew --dry-run
+```
+
+Then re-check the site over HTTPS:
+
+```bash
+curl -I https://your-domain.com
+```
+
+A `200` (or `301` → `200` if you're testing the bare HTTP URL) with a valid cert means the full chain — EC2 → Elastic IP → security group → Docker containers → Nginx → TLS — is working end to end.
